@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Phantom Wallet - Infinite Gains</title>
+    <title>Phantom Wallet Replica</title>
     <!-- Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,6 +79,21 @@
             position: relative;
             z-index: 1;
             margin-top: 4px;
+        }
+
+        /* Profile Icon Container */
+        .profile-btn {
+            position: absolute;
+            left: var(--pad-x);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #2A2A2A; /* Dark Grey Background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid #333;
         }
 
         .account-selector {
@@ -378,11 +393,12 @@
         .bg-black { background-color: #000; border: 1px solid #333; }
         .bg-white { background-color: #fff; }
         
-        /* Reset button (Hidden by default, visible if needed for debugging) */
+        /* Reset button (Hidden, click top center to reset logic) */
         .reset-trigger {
             position: absolute;
             top: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 50px;
             height: 50px;
             z-index: 1000;
@@ -393,16 +409,20 @@
 <body>
 
 <div class="app-frame">
-    <!-- Hidden trigger to reset balance (Click top left corner) -->
-    <div class="reset-trigger" onclick="localStorage.removeItem('phantom_balance'); location.reload();" title="Reset Balance"></div>
+    <!-- Hidden trigger to reset balance logic -->
+    <div class="reset-trigger" onclick="localStorage.removeItem('phantom_balance'); location.reload();"></div>
 
     <!-- Ambient Green Glow -->
     <div class="top-glow"></div>
 
     <!-- Header -->
     <header class="header">
-        <div class="avatar" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #444, #222); position: absolute; left: 16px;">
-            <svg viewBox="0 0 24 24" width="32" height="32" fill="#555"><circle cx="12" cy="12" r="12"/></svg>
+        <!-- New Profile Icon -->
+        <div class="profile-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
         </div>
 
         <div class="account-selector">
@@ -417,7 +437,6 @@
 
     <!-- Balance -->
     <section class="balance-section">
-        <!-- IDs added for JS targeting -->
         <div class="balance-amount" id="balanceDisplay">$2,256.67</div>
         <div class="balance-change" id="changeDisplay">
             +$4.95 +0.22%
@@ -600,7 +619,6 @@
         }
 
         // 2. Determine random increase (Between $50 and $500 for noticeable effect)
-        // You can tweak these numbers to make it faster or slower
         const minGain = 50;
         const maxGain = 500;
         const randomGain = Math.random() * (maxGain - minGain) + minGain;
@@ -611,13 +629,13 @@
         // 4. Save to LocalStorage
         localStorage.setItem(STORAGE_KEY, newBalance.toFixed(2));
 
-        // 5. Calculate percentage change for the badge (based on this specific reload gain)
+        // 5. Calculate percentage change for the badge
         const percentChange = ((randomGain / currentBalance) * 100).toFixed(2);
 
         // 6. Update DOM
         balanceEl.innerText = USD.format(newBalance);
         
-        // Update the green badge to show what you just "earned"
+        // Update the green badge
         changeEl.innerHTML = `+${USD.format(randomGain)} +${percentChange}%`;
     });
 </script>
