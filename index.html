@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Asset Tracker - Developer Preview</title>
+    <title>Asset Manager - Dev Preview</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,122 +15,116 @@
         --text-secondary: #999999;
         --accent-purple: #AC9EF3;
         --accent-green: #27D17F;
+        --accent-red: #FF4B4B;
         --border-radius-card: 16px;
         --pad-x: 16px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background-color: #000; color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; }
+    .app-frame { width: 100%; max-width: 420px; background-color: var(--bg-app); min-height: 100vh; position: relative; padding-bottom: 100px; overflow-x: hidden; }
     
-    .app-frame { 
-        width: 100%; 
-        max-width: 420px; 
-        background-color: var(--bg-app); 
-        min-height: 100vh; 
-        position: relative; 
-        padding-bottom: 100px; 
-    }
-    
-    .top-glow { 
-        position: absolute; top: -80px; left: 50%; transform: translateX(-50%); 
-        width: 350px; height: 350px; 
-        background: radial-gradient(circle, rgba(172, 158, 243, 0.08) 0%, rgba(21, 21, 22, 0) 70%); 
-        z-index: 0; pointer-events: none; 
-    }
+    .top-glow { position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(39, 209, 127, 0.1) 0%, rgba(21, 21, 22, 0) 70%); z-index: 0; pointer-events: none; }
 
     .header { display: flex; justify-content: center; align-items: center; padding: 16px var(--pad-x); position: relative; z-index: 1; }
-    .profile-btn { 
-        position: absolute; left: var(--pad-x); 
-        width: 32px; height: 32px; border-radius: 50%; 
-        background-color: #2A2A2A; display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; border: 1px solid #333;
-    }
+    .profile-btn { position: absolute; left: var(--pad-x); width: 32px; height: 32px; border-radius: 50%; background-color: #2A2A2A; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #333; }
+    .account-selector { font-weight: 600; font-size: 16px; color: #EFEFEF; }
 
-    .balance-section { text-align: center; padding: 20px 0 30px 0; z-index: 1; position: relative; }
-    .balance-amount { font-size: 44px; font-weight: 700; letter-spacing: -1.5px; margin-bottom: 4px; }
-    .balance-change { color: var(--accent-green); font-size: 14px; font-weight: 500; background: rgba(39, 209, 127, 0.1); padding: 4px 12px; border-radius: 20px; display: inline-block; }
+    .balance-section { text-align: center; padding: 24px 0 32px 0; z-index: 1; position: relative; }
+    .balance-amount { font-size: 44px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; }
+    .balance-change { color: var(--accent-green); font-size: 14px; font-weight: 500; }
+
+    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 var(--pad-x); margin-bottom: 32px; }
+    .action-btn-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .action-btn { width: 100%; aspect-ratio: 1; background-color: #222; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 1px solid #333; }
+    .action-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
 
     .token-list { padding: 0 var(--pad-x); display: flex; flex-direction: column; gap: 12px; }
     .token-card { background-color: var(--bg-card); border-radius: var(--border-radius-card); padding: 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #2a2a2a; }
     .token-left { display: flex; align-items: center; gap: 12px; }
-    .token-icon { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 18px; }
-    .token-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .token-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 18px; }
+    .token-name { font-size: 15px; font-weight: 600; }
     .token-balance { font-size: 13px; color: var(--text-secondary); }
     .token-right { text-align: right; }
-    .token-fiat { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-    .token-change { font-size: 13px; font-weight: 500; color: var(--accent-green); }
+    .token-fiat { font-size: 15px; font-weight: 600; }
+    .token-change { font-size: 13px; font-weight: 500; }
 
-    /* Theme Colors */
+    /* Coin Colors */
     .bg-sol { background: linear-gradient(135deg, #9945FF, #14F195); }
     .bg-btc { background-color: #F7931A; }
-    .bg-pepe { background: linear-gradient(135deg, #3D9029, #1a4a12); }
+    .bg-eth { background-color: #627EEA; }
+    .bg-pepe { background-color: #3D9029; }
     .bg-doge { background-color: #C2A633; }
 
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; height: 80px; background: rgba(21,21,22,0.98); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
-    .nav-icon { font-size: 24px; opacity: 0.4; }
-    .nav-icon.active { opacity: 1; filter: drop-shadow(0 0 8px var(--accent-purple)); }
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; height: 75px; background: rgba(21,21,22,0.9); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
+    .nav-item { color: #555; }
+    .nav-item.active { color: var(--accent-purple); }
 </style>
 </head>
 <body>
 <div class="app-frame">
     <div class="top-glow"></div>
     <header class="header">
-        <div class="profile-btn" id="profileTrigger">👤</div>
-        <div style="font-weight: 600; font-size: 15px;">Wallet Overview</div>
+        <div class="profile-btn" id="profileTrigger">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <div class="account-selector">Main Wallet</div>
     </header>
 
     <section class="balance-section">
-        <div class="balance-amount" id="mainBalance">€0,000.00</div>
-        <div class="balance-change" id="mainChange">+€0.00 (0.00%)</div>
+        <div class="balance-amount" id="mainBalance">€0,00</div>
+        <div class="balance-change" id="mainChange">+€0,00 (0.00%)</div>
     </section>
 
-    <div class="token-list" id="tokenList"></div>
+    <section class="action-grid">
+        <div class="action-btn-col"><button class="action-btn">📥</button><span class="action-label">Receive</span></div>
+        <div class="action-btn-col"><button class="action-btn">📤</button><span class="action-label">Send</span></div>
+        <div class="action-btn-col"><button class="action-btn">🔄</button><span class="action-label">Swap</span></div>
+        <div class="action-btn-col"><button class="action-btn">💵</button><span class="action-label">Buy</span></div>
+    </section>
+
+    <div class="token-list" id="tokenList">
+        </div>
 
     <nav class="bottom-nav">
-        <div class="nav-icon active">💎</div>
-        <div class="nav-icon">📊</div>
-        <div class="nav-icon">🗺️</div>
-        <div class="nav-icon">⚙️</div>
+        <div class="nav-item active">🏠</div>
+        <div class="nav-item">🧭</div>
+        <div class="nav-item">⚡</div>
+        <div class="nav-item">⚙️</div>
     </nav>
 </div>
 
 <script>
-    const STORAGE_KEY = 'v4_dynamic_balance';
+    const STORAGE_KEY = 'crypto_demo_balance';
     const profileBtn = document.getElementById('profileTrigger');
     const balanceEl = document.getElementById('mainBalance');
     const changeEl = document.getElementById('mainChange');
     const tokenListContainer = document.getElementById('tokenList');
 
+    // Portfolio configuration (Weights should add up to 1.0)
     const tokens = [
-        { name: 'Bitcoin', symbol: 'BTC', weight: 0.40, color: 'bg-btc', price: 91250.00 },
-        { name: 'Solana', symbol: 'SOL', weight: 0.30, color: 'bg-sol', price: 142.15 },
-        { name: 'Pepe', symbol: 'PEPE', weight: 0.20, color: 'bg-pepe', price: 0.0000125 },
-        { name: 'Dogecoin', symbol: 'DOGE', weight: 0.10, color: 'bg-doge', price: 0.39 }
+        { name: 'Solana', symbol: 'SOL', weight: 0.45, color: 'bg-sol', price: 145.20 },
+        { name: 'Bitcoin', symbol: 'BTC', weight: 0.30, color: 'bg-btc', price: 92400.00 },
+        { name: 'Pepe', symbol: 'PEPE', weight: 0.15, color: 'bg-pepe', price: 0.000012 },
+        { name: 'Dogecoin', symbol: 'DOGE', weight: 0.10, color: 'bg-doge', price: 0.38 }
     ];
 
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency', currency: 'EUR', minimumFractionDigits: 2
-    });
+    const EUR = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 
     function updateUI() {
         let total = parseFloat(localStorage.getItem(STORAGE_KEY)) || 5000;
-        balanceEl.innerText = formatter.format(total);
+        balanceEl.innerText = EUR.format(total);
 
-        // Randomize the "Total Daily Gain" display slightly
-        const totalGainPct = 2.5 + (Math.random() * 2);
-        const totalGainValue = total * (totalGainPct / 100);
-        changeEl.innerText = `+${formatter.format(totalGainValue)} (${totalGainPct.toFixed(2)}%)`;
+        // Calculate fake daily gain (simulating 2.4% of total)
+        let gainValue = total * 0.024;
+        changeEl.innerText = `+${EUR.format(gainValue)} (+2.41%)`;
 
+        // Clear and rebuild token list
         tokenListContainer.innerHTML = '';
         tokens.forEach(t => {
-            const tokenValue = total * t.weight;
-            const tokenQty = (tokenValue / t.price).toLocaleString('en-US', { 
-                maximumFractionDigits: t.symbol === 'PEPE' ? 0 : 5 
-            });
-            
-            // Randomize individual gain between 1.5% and 6%
-            const gainPct = 1.5 + (Math.random() * 4.5);
-            const gainFiat = tokenValue * (gainPct / 100);
+            const tokenFiatVal = total * t.weight;
+            const tokenQty = (tokenFiatVal / t.price).toFixed(t.symbol === 'PEPE' ? 0 : 4);
+            const dailyGain = (tokenFiatVal * 0.031).toFixed(2); // Localized gain
 
             const card = document.createElement('div');
             card.className = 'token-card';
@@ -143,22 +137,25 @@
                     </div>
                 </div>
                 <div class="token-right">
-                    <div class="token-fiat">${formatter.format(tokenValue)}</div>
-                    <div class="token-change">+${formatter.format(gainFiat)}</div>
+                    <div class="token-fiat">${EUR.format(tokenFiatVal)}</div>
+                    <div class="token-change" style="color: var(--accent-green)">+€${dailyGain}</div>
                 </div>
             `;
             tokenListContainer.appendChild(card);
         });
     }
 
-    // Refresh Increment Logic
-    let saved = parseFloat(localStorage.getItem(STORAGE_KEY)) || 5000;
-    localStorage.setItem(STORAGE_KEY, saved + (Math.random() * 500));
+    // Refresh Logic: Increase by 0-500
+    let current = parseFloat(localStorage.getItem(STORAGE_KEY)) || 5000;
+    let increment = Math.random() * 500;
+    localStorage.setItem(STORAGE_KEY, current + increment);
 
     // Reset Logic
     profileBtn.addEventListener('click', () => {
         localStorage.setItem(STORAGE_KEY, 5000);
         updateUI();
+        balanceEl.style.color = '#AC9EF3';
+        setTimeout(() => balanceEl.style.color = '#fff', 200);
     });
 
     updateUI();
