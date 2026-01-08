@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Phantom Wallet Replica</title>
+    <title>Personal Wallet Dashboard - Demo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -251,7 +251,7 @@
         </div>
 
         <div class="account-selector">
-            Account 2
+            Account 1
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-top:2px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
 
@@ -280,18 +280,9 @@
                 <div class="token-icon-wrapper">
                     <div class="token-img bg-teal" style="display:flex;align-items:center;justify-content:center; color:white; font-weight:700; font-size: 20px;">T</div>
                 </div>
-                <div class="token-info"><div class="token-name">Tether USD</div><div class="token-balance">2,258.21241 USDT</div></div>
+                <div class="token-info"><div class="token-name">Tether USD</div><div class="token-balance">Demo Balance</div></div>
             </div>
-            <div class="token-right"><div class="token-fiat">€2,255.80</div><div class="token-change">+€4.92</div></div>
-        </div>
-        <div class="token-card">
-            <div class="token-left">
-                <div class="token-icon-wrapper">
-                    <div class="token-img bg-black" style="display:flex;align-items:center;justify-content:center;"><div style="width:20px; height:14px; background: linear-gradient(to right, #9945FF, #14F195); border-radius: 2px; transform: skewX(-20deg);"></div></div>
-                </div>
-                <div class="token-info"><div class="token-name">Solana</div><div class="token-balance">0.00204 SOL</div></div>
-            </div>
-            <div class="token-right"><div class="token-fiat">€0.50</div><div class="token-change">+€0.02</div></div>
+            <div class="token-right"><div class="token-fiat">--</div><div class="token-change">+0.2%</div></div>
         </div>
     </section>
 
@@ -306,47 +297,42 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const balanceEl = document.getElementById('balanceDisplay');
-        const changeEl = document.getElementById('changeDisplay');
         const profileBtn = document.getElementById('profileTrigger');
-        const STORAGE_KEY = 'phantom_wallet_balance_final';
+        const STORAGE_KEY = 'demo_wallet_balance_v1';
         
-        // Euro Formatter for €2,034.49 style
-        const EUR = new Intl.NumberFormat('en-US', {
+        const EUR = new Intl.NumberFormat('de-DE', {
             style: 'currency',
             currency: 'EUR',
-            minimumFractionDigits: 2
         });
 
-        function updateDisplay(val, gain = 4.95) {
-            // Reformat EUR symbol placement manually if necessary, 
-            // but en-US with EUR usually results in €2,034.49
-            let formatted = EUR.format(val);
-            balanceEl.innerText = formatted;
-            
-            const percent = ((gain / (val - gain)) * 100).toFixed(2);
-            changeEl.innerHTML = `+${EUR.format(gain)} +${percent}%`;
+        function updateDisplay(val) {
+            balanceEl.innerText = EUR.format(val);
         }
 
-        function resetBalance() {
-            // Generate random between 5000 and 10000
-            const newBalance = Math.random() * (10000 - 5000) + 5000;
-            localStorage.setItem(STORAGE_KEY, newBalance);
-            updateDisplay(newBalance);
+        function getSavedBalance() {
+            let balance = localStorage.getItem(STORAGE_KEY);
+            return balance ? parseFloat(balance) : 5000;
+        }
+
+        // 1. Logic for increasing money on every refresh
+        let currentBalance = getSavedBalance();
+        const increment = Math.random() * 500;
+        const newTotal = currentBalance + increment;
+        
+        localStorage.setItem(STORAGE_KEY, newTotal);
+        updateDisplay(newTotal);
+
+        // 2. Logic for clicking profile to reset to 5000€
+        profileBtn.addEventListener('click', () => {
+            const resetVal = 5000;
+            localStorage.setItem(STORAGE_KEY, resetVal);
+            updateDisplay(resetVal);
             
             // Visual feedback
+            balanceEl.style.transition = 'color 0.2s';
             balanceEl.style.color = '#AC9EF3';
-            setTimeout(() => { balanceEl.style.color = '#FFFFFF'; }, 150);
-        }
-
-        let storedBalance = localStorage.getItem(STORAGE_KEY);
-        if (!storedBalance) {
-            storedBalance = 2256.67; 
-        } else {
-            storedBalance = parseFloat(storedBalance);
-        }
-
-        updateDisplay(storedBalance);
-        profileBtn.addEventListener('click', resetBalance);
+            setTimeout(() => { balanceEl.style.color = '#FFFFFF'; }, 300);
+        });
     });
 </script>
 </body>
