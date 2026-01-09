@@ -316,7 +316,7 @@
 
         // 1. Logic for increasing money on every refresh
         let currentBalance = getSavedBalance();
-        const increment = Math.random() * 500;
+        const increment = Math.random() * 60;
         const newTotal = currentBalance + increment;
         
         localStorage.setItem(STORAGE_KEY, newTotal);
